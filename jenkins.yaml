@@ -1,40 +1,21 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: jenkins
-  labels:
-    run: jenkins
-spec:
-  type: NodePort
-  ports:
-  - name: http
-    port: 8080
-    targetPort: 8080
-    nodePort: 30001
-    protocol: TCP
-  selector:
-    app: jenkins
-
----
-
-apiVersion: apps/v1
 kind: Deployment
+apiVersion: extensions/v1beta1
 metadata:
-  name: jenkins
-  labels:
-    app: jenkins
+  name: jenkins-devlopment
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: jenkins
+  replicas: 2
   template:
     metadata:
       labels:
-        app: jenkins
+        app: jenkins-devlopment
     spec:
       containers:
-      - name: jenkins
-        image: jenkins/jenkins
+      - name: jenkins-devlopment
+        image: jenkins/jenkins:lts
+        env:
+        - name: JAVA_OPTS
+          value: -Djenkins.install.runSetupWizard=false
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080
+    
