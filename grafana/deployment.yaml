@@ -1,0 +1,40 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+    spec:
+      containers:
+      - image: 
+        imagePullPolicy: Always
+        name: grafana
+        ports:
+        - containerPort: 3000
+          name: 3000
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /var/lib/grafana
+          name: grafana-storage
+        - mountPath: /etc/grafana/provisioning/datasources
+          name: grafana-datasources-config
+        - mountPath: /etc/grafana/
+          name: grafana-config
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - {}
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: grafana-storage
+        persistentVolumeClaim:
+          claimName: grafana-storage
+      - configMap:
+          defaultMode: 420
+          name: grafana-datasources
+          optional: false
+        name: grafana-datasources-config
+      - configMap:
+          defaultMode: 420
+          name: grafana-config
+          optional: false
+        name: grafana-config-stroage-config
