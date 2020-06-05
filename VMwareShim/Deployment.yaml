@@ -1,0 +1,25 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: vmwareshim
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: vmwareshim
+    spec:
+      containers:
+      - name: vmwareshim
+        image: vmware/webhook-shims
+      volumeMounts:
+        - mountPath: /root/webhook-shims/loginsightwebhookdemo/jenkins.py
+          name: jenkins
+          subPath: jenkins.py
+      volumes:
+        - configMap:
+            defaultMode: 511
+            name: vmware-jenkins-config
+        ports:
+          - containerPort: 5000
+
