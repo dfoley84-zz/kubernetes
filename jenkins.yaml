@@ -21,4 +21,23 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
-    
+        volumeMounts:
+        - mountPath: /var/jenkins_home/
+          name: vol1
+      dnsConfig:
+        searches:
+        - <DNS>
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: <PwD>
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        fsGroup: 2000
+        runAsGroup: 1000
+        runAsUser: 1000
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: vol1
+        persistentVolumeClaim:
+          claimName: jenkins
